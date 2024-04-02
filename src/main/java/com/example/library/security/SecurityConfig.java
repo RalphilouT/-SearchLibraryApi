@@ -24,7 +24,6 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth-> auth.requestMatchers("**")
                         .permitAll()
@@ -35,19 +34,5 @@ public class SecurityConfig{
 
         return http.build();
     }
-
-@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration corsConfiguration = new CorsConfiguration();
-    //Make the below setting as * to allow connection from any hos
-    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-    corsConfiguration.setAllowedMethods(List.of("GET", "POST"));
-    corsConfiguration.setAllowCredentials(true);
-    corsConfiguration.setAllowedHeaders(List.of("*"));
-    corsConfiguration.setMaxAge(3600L);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", corsConfiguration);
-    return source;
-}
 
 }
